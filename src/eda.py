@@ -3,11 +3,11 @@ from pathlib import Path
 
 import matplotlib
 matplotlib.use("Agg")
-import matplotlib.pyplot as plt  # noqa: E402
-import pandas as pd  # noqa: E402
-import seaborn as sns  # noqa: E402
+import matplotlib.pyplot as plt 
+import pandas as pd 
+import seaborn as sns 
 
-from src.data import CLEAN, NUM  # noqa: E402
+from src.data import CLEAN, NUM 
 
 OUT = Path("reports/figures")
 

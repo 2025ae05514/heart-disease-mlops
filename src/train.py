@@ -6,22 +6,22 @@ from pathlib import Path
 import joblib
 import matplotlib
 matplotlib.use("Agg")
-import matplotlib.pyplot as plt  # noqa: E402
-import mlflow  # noqa: E402
-import mlflow.sklearn  # noqa: E402
-import pandas as pd  # noqa: E402
-import yaml  # noqa: E402
-from sklearn.ensemble import RandomForestClassifier  # noqa: E402
-from sklearn.linear_model import LogisticRegression  # noqa: E402
-from sklearn.base import clone  # noqa: E402
-from sklearn.metrics import (ConfusionMatrixDisplay, RocCurveDisplay,  # noqa: E402
+import matplotlib.pyplot as plt 
+import mlflow 
+import mlflow.sklearn 
+import pandas as pd 
+import yaml 
+from sklearn.ensemble import RandomForestClassifier 
+from sklearn.linear_model import LogisticRegression 
+from sklearn.base import clone 
+from sklearn.metrics import (ConfusionMatrixDisplay, RocCurveDisplay, 
                              accuracy_score, precision_score, recall_score,
                              roc_auc_score)
-from sklearn.model_selection import (GridSearchCV, StratifiedKFold,  # noqa: E402
+from sklearn.model_selection import (GridSearchCV, StratifiedKFold, 
                                      cross_validate, train_test_split)
-from sklearn.pipeline import Pipeline  # noqa: E402
+from sklearn.pipeline import Pipeline 
 
-from src.data import CLEAN, build_preprocessor, split_xy  # noqa: E402
+from src.data import CLEAN, build_preprocessor, split_xy 
 
 CONFIG = yaml.safe_load(
     (Path(__file__).resolve().parents[1] / "configs" / "train.yaml").read_text())
