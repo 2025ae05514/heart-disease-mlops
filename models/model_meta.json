@@ -1,0 +1,39 @@
+{
+  "model": "logistic_regression",
+  "trained_at_utc": "2026-10-20T11:51:54+00:00",
+  "rows": 920,
+  "features": [
+    "age",
+    "trestbps",
+    "chol",
+    "thalach",
+    "oldpeak",
+    "sex",
+    "cp",
+    "fbs",
+    "restecg",
+    "exang",
+    "slope",
+    "ca",
+    "thal"
+  ],
+  "metrics": {
+    "cv_accuracy": 0.8247,
+    "cv_precision": 0.8446,
+    "cv_recall": 0.8426,
+    "cv_roc_auc": 0.9025,
+    "test_accuracy": 0.8533,
+    "test_precision": 0.844,
+    "test_recall": 0.902,
+    "test_roc_auc": 0.8981,
+    "test_roc_auc_cleveland": 0.9632,
+    "test_roc_auc_hungarian": 0.852,
+    "test_roc_auc_switzerland": 0.6739,
+    "test_roc_auc_va": 0.6767,
+    "loso_roc_auc_cleveland": 0.8864,
+    "loso_roc_auc_hungarian": 0.9071,
+    "loso_roc_auc_switzerland": 0.7163,
+    "loso_roc_auc_va": 0.7352,
+    "loso_roc_auc_mean": 0.8113
+  }
+}

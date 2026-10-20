@@ -1,0 +1,15 @@
+pandas==2.3.3
+numpy
+scikit-learn==1.7.2
+matplotlib
+seaborn
+mlflow==3.17.1
+fastapi==0.148.0
+uvicorn
+joblib
+prometheus-client
+pytest
+flake8
+httpx
+pytest-cov
+pyyaml
