@@ -1,0 +1,153 @@
+name: ci
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+# bash here means every step runs with -e and pipefail, so "| tee" cannot hide a failure
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  lint:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install flake8==7.4.1
+      - name: Lint
+        run: flake8 . --count --statistics | tee flake8.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lint-log
+          path: flake8.log
+
+  train:
+    needs: lint
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Download, merge and clean data
+        run: python -m src.data 2>&1 | tee pipeline.log
+      - name: EDA
+        run: python -m src.eda 2>&1 | tee -a pipeline.log
+      - name: Train model
+        run: python -m src.train 2>&1 | tee -a pipeline.log
+      - name: Metrics in the run summary
+        run: |
+          python - <<'EOF' >> "$GITHUB_STEP_SUMMARY"
+          import json
+          m = json.load(open("models/model_meta.json"))
+          print("### Best model:", m["model"], "- trained on", m["rows"], "rows")
+          print("| metric | value |")
+          print("|---|---|")
+          for k, v in m["metrics"].items():
+              if k.startswith(("cv_", "test_roc_auc", "loso_roc_auc_mean")):
+                  print(f"| {k} | {v} |")
+          EOF
+      - uses: actions/upload-artifact@v4
+        with:
+          name: model
+          path: models/
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: training-outputs
+          path: |
+            reports/
+            mlflow.db
+            mlruns/
+            pipeline.log
+
+  test:
+    needs: train
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - uses: actions/download-artifact@v4
+        with:
+          name: model
+          path: models/
+      - name: Unit tests with coverage
+        run: |
+          pytest -v --cov=src --cov-report=term --cov-report=xml \
+                 --junitxml=pytest-report.xml | tee pytest.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results
+          path: |
+            pytest.log
+            pytest-report.xml
+            coverage.xml
+
+  docker:
+    needs: test
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: model
+          path: models/
+      - name: Build image
+        run: docker build -t heart-api:ci . 2>&1 | tee docker-build.log
+      - name: Run container
+        run: docker run -d --name api -p 8000:8000 heart-api:ci
+      - name: Wait for /health
+        run: |
+          for i in $(seq 1 30); do
+            curl -sf http://localhost:8000/health && exit 0
+            sleep 2
+          done
+          docker logs api
+          exit 1
+      - name: Smoke test
+        run: |
+          post() { curl -s -X POST http://localhost:8000/predict -H 'Content-Type: application/json' -d @"$1"; }
+          post samples/high_risk.json | tee high.json
+          post samples/low_risk.json | tee low.json
+          python -c "import json; assert json.load(open('high.json'))['prediction'] == 1; assert json.load(open('low.json'))['prediction'] == 0"
+          code=$(curl -s -o /dev/null -w '%{http_code}' -X POST http://localhost:8000/predict -H 'Content-Type: application/json' -d @samples/invalid.json)
+          test "$code" = 422
+          curl -sf http://localhost:8000/metrics | grep predict_requests_total
+      - name: Container user
+        run: docker exec api id
+      - name: Container logs
+        if: always()
+        run: docker logs api > container.log 2>&1 || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: docker-logs
+          path: |
+            docker-build.log
+            container.log
+            high.json
+            low.json

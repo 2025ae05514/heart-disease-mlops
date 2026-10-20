@@ -1,0 +1,13 @@
+# Training settings. Change values here, then rerun: python -m src.train
+seed: 42
+test_size: 0.2        # share of rows held out for the final test
+cv_folds: 5
+experiment: heart-disease
+
+# grid search options for each model (keys follow the pipeline step names)
+logistic_regression:
+  clf__C: [0.1, 1, 10]
+
+random_forest:
+  clf__n_estimators: [100, 300]
+  clf__max_depth: [3, 5, null]

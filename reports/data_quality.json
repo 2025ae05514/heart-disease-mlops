@@ -1,0 +1,125 @@
+{
+  "rows": 920,
+  "rows_per_source": {
+    "cleveland": 303,
+    "hungarian": 294,
+    "va": 200,
+    "switzerland": 123
+  },
+  "positives_per_source": {
+    "cleveland": 139,
+    "hungarian": 106,
+    "switzerland": 115,
+    "va": 149
+  },
+  "dtypes": {
+    "age": "float64",
+    "sex": "float64",
+    "cp": "float64",
+    "trestbps": "float64",
+    "chol": "float64",
+    "fbs": "float64",
+    "restecg": "float64",
+    "thalach": "float64",
+    "exang": "float64",
+    "oldpeak": "float64",
+    "slope": "float64",
+    "ca": "float64",
+    "thal": "float64",
+    "target": "int64"
+  },
+  "missing": {
+    "trestbps": {
+      "count": 60,
+      "pct": 6.5
+    },
+    "chol": {
+      "count": 202,
+      "pct": 22.0
+    },
+    "fbs": {
+      "count": 90,
+      "pct": 9.8
+    },
+    "restecg": {
+      "count": 2,
+      "pct": 0.2
+    },
+    "thalach": {
+      "count": 55,
+      "pct": 6.0
+    },
+    "exang": {
+      "count": 55,
+      "pct": 6.0
+    },
+    "oldpeak": {
+      "count": 62,
+      "pct": 6.7
+    },
+    "slope": {
+      "count": 309,
+      "pct": 33.6
+    },
+    "ca": {
+      "count": 611,
+      "pct": 66.4
+    },
+    "thal": {
+      "count": 486,
+      "pct": 52.8
+    }
+  },
+  "numeric_summary": {
+    "age": {
+      "count": 920.0,
+      "mean": 53.51,
+      "std": 9.42,
+      "min": 28.0,
+      "25%": 47.0,
+      "50%": 54.0,
+      "75%": 60.0,
+      "max": 77.0
+    },
+    "trestbps": {
+      "count": 860.0,
+      "mean": 132.29,
+      "std": 18.54,
+      "min": 80.0,
+      "25%": 120.0,
+      "50%": 130.0,
+      "75%": 140.0,
+      "max": 200.0
+    },
+    "chol": {
+      "count": 718.0,
+      "mean": 246.83,
+      "std": 58.53,
+      "min": 85.0,
+      "25%": 210.0,
+      "50%": 239.5,
+      "75%": 276.75,
+      "max": 603.0
+    },
+    "thalach": {
+      "count": 865.0,
+      "mean": 137.55,
+      "std": 25.93,
+      "min": 60.0,
+      "25%": 120.0,
+      "50%": 140.0,
+      "75%": 157.0,
+      "max": 202.0
+    },
+    "oldpeak": {
+      "count": 858.0,
+      "mean": 0.88,
+      "std": 1.09,
+      "min": -2.6,
+      "25%": 0.0,
+      "50%": 0.5,
+      "75%": 1.5,
+      "max": 6.2
+    }
+  }
+}
