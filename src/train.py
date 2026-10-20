@@ -1,11 +1,11 @@
 """Train, tune and track models with MLflow; save the best pipeline."""
 import json
+import os
 from datetime import datetime, timezone
 from pathlib import Path
 
+os.environ["MPLBACKEND"] = "Agg"
 import joblib
-import matplotlib
-matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import mlflow
 import mlflow.sklearn
