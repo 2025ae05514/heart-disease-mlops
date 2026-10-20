@@ -1,13 +1,13 @@
 """EDA plots saved to reports/figures."""
-import os
 from pathlib import Path
 
-os.environ["MPLBACKEND"] = "Agg"
-import matplotlib.pyplot as plt
-import pandas as pd
-import seaborn as sns
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt  # noqa: E402
+import pandas as pd  # noqa: E402
+import seaborn as sns  # noqa: E402
 
-from src.data import CLEAN, NUM
+from src.data import CLEAN, NUM  # noqa: E402
 
 OUT = Path("reports/figures")
 
